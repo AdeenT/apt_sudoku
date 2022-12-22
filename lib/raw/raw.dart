@@ -1,0 +1,1 @@
+final rawData = <String , dynamic>{};
