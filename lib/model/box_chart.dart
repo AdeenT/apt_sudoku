@@ -53,9 +53,9 @@ class SudokuCell {
         isCorrect: map['isCorrect'] as bool,
         isDefault: map['isDefault'] as bool,
         isExist: map['isExist'] as bool,
-        note: List<int>.from(
-          (map['note'] as List<int>),
-        ));
+        note: 
+          [],
+        );
   }
 
   String toJson() => json.encode(toMap());
