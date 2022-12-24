@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:liquid_swipe/liquid_swipe.dart';
-import 'package:apt_sudoku/controllers/game_controller.dart';
 
 class HowToPlay extends StatefulWidget {
   const HowToPlay({super.key});

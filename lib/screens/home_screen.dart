@@ -1,11 +1,13 @@
 import 'package:apt_sudoku/controllers/settings_controllers.dart';
+import 'package:apt_sudoku/functions/game_page_data.dart';
+import 'package:apt_sudoku/model/box_chart.dart';
 import 'package:apt_sudoku/screens/account.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'game_page.dart';
 
-var starsCollected = 0;
 String? img;
+String countKey = 'countKey';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -17,9 +19,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
-    setState(() {
-      starsCollected.toString();
-    });
+    setState(() {});
     super.initState();
   }
 
@@ -46,7 +46,7 @@ class _HomeScreenState extends State<HomeScreen> {
           actions: [
             IconButton(
               icon: const Icon(Icons.account_box_rounded),
-              onPressed: () => Get.to(const Account()),
+              onPressed: () => Get.to(() => const Account()),
             ),
           ],
         ),
@@ -55,24 +55,7 @@ class _HomeScreenState extends State<HomeScreen> {
             child: Column(
               children: [
                 SizedBox(
-                  height: 30,
-                  child: ListTile(
-                    leading: const Icon(
-                      Icons.star_rate_rounded,
-                      color: Colors.amber,
-                      size: 40,
-                    ),
-                    title: Text(
-                      starsCollected.toString(),
-                      style: const TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(
-                  height: 220,
+                  height: MediaQuery.of(context).size.width * 0.7,
                 ),
                 const Align(
                   alignment: Alignment.center,
@@ -94,8 +77,8 @@ class _HomeScreenState extends State<HomeScreen> {
                       fontSize: 32,
                       fontWeight: FontWeight.w600),
                 ),
-                const SizedBox(
-                  height: 200,
+                 SizedBox(
+                  height: MediaQuery.of(context).size.width * 0.6,
                 ),
                 ElevatedButton(
                   onPressed: () {
@@ -108,7 +91,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             child: Text('Choose Difficulty'),
                           ),
                           content: SizedBox(
-                            height: 230,
+                            height: MediaQuery.of(context).size.width * 0.7,
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: [
@@ -152,5 +135,22 @@ class _HomeScreenState extends State<HomeScreen> {
               ));
         },
       );
-      
+
+  // continueButton() {
+  //   if (rawData.isNotEmpty) {
+  //     return ElevatedButton(
+  //       onPressed: () {
+  //         getData();
+  //       },
+  //       style: ButtonStyle(
+  //         backgroundColor: MaterialStateProperty.all(Colors.blue),
+  //       ),
+  //       child: const Text('  Continue  '),
+  //     );
+  //   }
+  //}
+
+  void getData() async {
+    SudokuCell savedGame = await GamePageData().getJsonData();
+  }
 }

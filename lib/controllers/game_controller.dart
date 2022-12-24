@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:apt_sudoku/screens/game_page.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:apt_sudoku/model/box_chart.dart';
@@ -35,7 +36,7 @@ class GameController extends GetxController {
 
   @override
   void onClose() {
-    if (_timer == null) {
+    if (_timer == null || stopTime == true) {
       _timer!.cancel();
     }
   }
@@ -96,7 +97,6 @@ class GameController extends GetxController {
       }
     }
     if (isComplete) {
-      starsCollected++;
       levelCompleted();
     }
   }
@@ -120,10 +120,8 @@ class GameController extends GetxController {
     update();
   }
 
-  // ignore: duplicate_ignore
   void onHint() {
     if (_unChangable()) return;
-    // ignore: unrelated_type_equality_checks
     if (hints == 0) return;
     sudoku[selectedSudoku.row][selectedSudoku.col].text =
         sudoku[selectedSudoku.row][selectedSudoku.col].correctText;
@@ -178,34 +176,30 @@ class GameController extends GetxController {
           height: 200,
           child: Column(
             children: [
-              button('Beginner'),
-              button('Easy'),
-              button('Medium'),
-              button('Hard'),
-              // TextButton(
-              //     onPressed: () {
-              //       restart(1);
-              //       Get.back();
-              //     },
-              //     child: const Text('Beginner')),
-              // TextButton(
-              //     onPressed: () {
-              //       restart(2);
-              //       Get.back();
-              //     },
-              //     child: const Text('Easy')),
-              // TextButton(
-              //     onPressed: () {
-              //       restart(3);
-              //       Get.back();
-              //     },
-              //     child: const Text("Medium")),
-              // TextButton(
-              //     onPressed: () {
-              //       restart(4);
-              //       Get.back();
-              //     },
-              //     child: const Text('Hard')),
+              TextButton(
+                  onPressed: () {
+                    restart(1);
+                    Get.back();
+                  },
+                  child: const Text('Beginner')),
+              TextButton(
+                  onPressed: () {
+                    restart(2);
+                    Get.back();
+                  },
+                  child: const Text('Easy')),
+              TextButton(
+                  onPressed: () {
+                    restart(3);
+                    Get.back();
+                  },
+                  child: const Text("Medium")),
+              TextButton(
+                  onPressed: () {
+                    restart(4);
+                    Get.back();
+                  },
+                  child: const Text('Hard')),
             ],
           ),
         ),
@@ -321,10 +315,11 @@ class GameController extends GetxController {
         ),
       );
 
-  Widget button(String text) {
+  Widget button(String text, difficulty) {
     return TextButton(
       onPressed: () {
         showRestartDialogue('Choose difficulty');
+        Get.back();
       },
       style: ButtonStyle(
         textStyle: MaterialStateProperty.all(

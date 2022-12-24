@@ -2,11 +2,12 @@ import 'package:apt_sudoku/functions/game_page_data.dart';
 import 'package:apt_sudoku/raw/raw.dart';
 import 'package:apt_sudoku/screens/home_screen.dart';
 import 'package:flutter/material.dart';
-
 import 'package:get/get.dart';
 import 'package:apt_sudoku/controllers/game_controller.dart';
 import 'package:apt_sudoku/model/box_chart.dart';
 
+
+ bool stopTime = true;
 class GamePage extends StatefulWidget {
   final int difficult;
   const GamePage({
@@ -20,6 +21,7 @@ class GamePage extends StatefulWidget {
 
 class _GamePageState extends State<GamePage> {
   final controller = Get.put(GameController());
+ 
 
   @override
   void initState() {
@@ -338,14 +340,17 @@ class _GamePageState extends State<GamePage> {
             content: const Text('Save game and exit?'),
             actions: [
               ElevatedButton(
-                onPressed: () => Get.off(const HomeScreen()),
+                onPressed: () {
+                  Get.back();
+                },
                 child: const Text('No'),
               ),
               ElevatedButton(
                 onPressed: () async {
                   await GamePageData().saveJsonData(rawData);
                   GamePageData().getJsonData();
-                  Get.off(const HomeScreen());
+                  stopTime;
+                  Get.off(() => const HomeScreen());
                 },
                 child: const Text('Yes'),
               ),
