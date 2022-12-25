@@ -1,11 +1,12 @@
 import 'package:apt_sudoku/controllers/settings_controllers.dart';
+import 'package:apt_sudoku/functions/game_page_data.dart';
 import 'package:apt_sudoku/screens/account.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'game_page.dart';
 
-var starsCollected = 0;
 String? img;
+String countKey = 'countKey';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -15,11 +16,10 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  bool isSavedGame = false;
   @override
   void initState() {
-    setState(() {
-      starsCollected.toString();
-    });
+    getData();
     super.initState();
   }
 
@@ -31,8 +31,8 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       child: Scaffold(
         appBar: AppBar(
-          iconTheme: const IconThemeData(
-            color: Colors.black,
+          iconTheme: IconThemeData(
+            color: Colors.grey.shade700,
           ),
           automaticallyImplyLeading: false,
           backgroundColor: Colors.white,
@@ -45,8 +45,9 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           actions: [
             IconButton(
-              icon: const Icon(Icons.account_box_rounded),
-              onPressed: () => Get.to(const Account()),
+              icon: const Icon(Icons.account_circle_outlined),
+              onPressed: () =>
+                  Get.to(() => const Account(), transition: Transition.cupertino),
             ),
           ],
         ),
@@ -55,24 +56,7 @@ class _HomeScreenState extends State<HomeScreen> {
             child: Column(
               children: [
                 SizedBox(
-                  height: 30,
-                  child: ListTile(
-                    leading: const Icon(
-                      Icons.star_rate_rounded,
-                      color: Colors.amber,
-                      size: 40,
-                    ),
-                    title: Text(
-                      starsCollected.toString(),
-                      style: const TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(
-                  height: 220,
+                  height: MediaQuery.of(context).size.width * 0.7,
                 ),
                 const Align(
                   alignment: Alignment.center,
@@ -94,43 +78,65 @@ class _HomeScreenState extends State<HomeScreen> {
                       fontSize: 32,
                       fontWeight: FontWeight.w600),
                 ),
-                const SizedBox(
-                  height: 200,
+                SizedBox(
+                  height: MediaQuery.of(context).size.width * 0.6,
                 ),
-                ElevatedButton(
-                  onPressed: () {
-                    showDialog(
-                      context: context,
-                      builder: (context) {
-                        return AlertDialog(
-                          backgroundColor: Colors.blue.shade50,
-                          title: const Center(
-                            child: Text('Choose Difficulty'),
-                          ),
-                          content: SizedBox(
-                            height: 230,
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                _difficultyButton('Beginner', 1),
-                                _difficultyButton('Easy', 2),
-                                _difficultyButton('Medium', 3),
-                                _difficultyButton('Hard', 4),
-                              ],
-                            ),
-                          ),
-                        );
-                      },
-                    );
-                  },
-                  style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all(Colors.blue),
-                  ),
-                  child: const Text(
-                    'New Game',
-                    style: TextStyle(color: Colors.white),
-                  ),
-                )
+                !isSavedGame
+                    ? ElevatedButton(
+                        onPressed: () {
+                          showDialog(
+                            context: context,
+                            builder: (context) {
+                              return AlertDialog(
+                                backgroundColor: Colors.blue.shade50,
+                                title: const Center(
+                                  child: Text('Choose Difficulty'),
+                                ),
+                                content: SizedBox(
+                                  height:
+                                      MediaQuery.of(context).size.width * 0.7,
+                                  child: Column(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
+                                    children: [
+                                      _difficultyButton('Beginner', 1),
+                                      _difficultyButton('Easy', 2),
+                                      _difficultyButton('Medium', 3),
+                                      _difficultyButton('Hard', 4),
+                                    ],
+                                  ),
+                                ),
+                              );
+                            },
+                          );
+                        },
+                        style: ButtonStyle(
+                          backgroundColor:
+                              MaterialStateProperty.all(Colors.blue),
+                        ),
+                        child: const Text(
+                          'New Game',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      )
+                    : ElevatedButton(
+                        onPressed: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    const GamePage(difficult: 5),
+                              ));
+                        },
+                        style: ButtonStyle(
+                          backgroundColor:
+                              MaterialStateProperty.all(Colors.blue),
+                        ),
+                        child: const Text(
+                          'Continue',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      )
               ],
             ),
           ),
@@ -145,12 +151,16 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         tileColor: Colors.blue.shade100,
         onTap: () {
-          Navigator.pushReplacement(
+          Navigator.push(
               context,
               MaterialPageRoute(
                 builder: (context) => GamePage(difficult: difficult),
               ));
         },
       );
-      
+
+  void getData() async {
+    isSavedGame = await GamePageDb.isSavedGameAvailable();
+    setState(() {});
+  }
 }

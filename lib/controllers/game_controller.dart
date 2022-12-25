@@ -1,16 +1,14 @@
 import 'dart:async';
+import 'package:apt_sudoku/functions/game_page_data.dart';
+import 'package:apt_sudoku/screens/game_page.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:apt_sudoku/model/box_chart.dart';
 import 'package:apt_sudoku/screens/home_screen.dart';
 import 'package:sudokuer/sudokuer.dart' as s;
-import '../functions/db.dart';
 
 class GameController extends GetxController {
-  final userModel = UserFunctions();
-  Timer? _timer;
   int remainingSeconds = 1;
-  final time = '00:00'.obs;
   RxList<List<SudokuCell>> sudoku = RxList<List<SudokuCell>>();
   RxInt mistakes = 3.obs;
   RxInt hints = 3.obs;
@@ -26,19 +24,6 @@ class GameController extends GetxController {
       isExist: false,
       note: []);
   RxBool isNote = false.obs;
-
-  @override
-  void onReady() {
-    _startTimer(900);
-    super.onReady();
-  }
-
-  @override
-  void onClose() {
-    if (_timer == null) {
-      _timer!.cancel();
-    }
-  }
 
   void restart(int difficultyLevel) {
     mistakes.value = 3;
@@ -86,6 +71,20 @@ class GameController extends GetxController {
     }
   }
 
+  void fetchContinueGameData() async {
+    var data = await GamePageDb.getGameData();
+    var hint = await GamePageDb.getHintData();
+    var mistake = await GamePageDb.getMistakeData();
+    var time = await GamePageDb.getTimeData();
+    if (data != null) {
+      sudoku.value = data;
+      hints.value = hint ?? 3;
+      mistakes.value = mistake ?? 3;
+    } else {
+      Get.back();
+    }
+  }
+
   isComplete() {
     bool isComplete = true;
     for (var i = 0; i < sudoku.length; i++) {
@@ -96,7 +95,7 @@ class GameController extends GetxController {
       }
     }
     if (isComplete) {
-      starsCollected++;
+      GamePageDb.eraseGameData();
       levelCompleted();
     }
   }
@@ -109,7 +108,7 @@ class GameController extends GetxController {
     selectedSudoku.text = 0;
     selectedSudoku.isCorrect = false;
     selectedSudoku.note.clear();
-    update();
+    // update();
   }
 
   void onNoteFill() {
@@ -117,13 +116,11 @@ class GameController extends GetxController {
     sudoku[selectedSudoku.row][selectedSudoku.col].note =
         List.generate(9, (index) => index + 1);
     fetchSafeValues();
-    update();
+    // update();
   }
 
-  // ignore: duplicate_ignore
   void onHint() {
     if (_unChangable()) return;
-    // ignore: unrelated_type_equality_checks
     if (hints == 0) return;
     sudoku[selectedSudoku.row][selectedSudoku.col].text =
         sudoku[selectedSudoku.row][selectedSudoku.col].correctText;
@@ -133,7 +130,7 @@ class GameController extends GetxController {
     hints--;
   }
 
-  void onNumberclick(int index) {
+  Future<void> onNumberclick(int index) async {
     if (selectedSudoku.row == 100) return;
     if (isNote.value) {
       if (sudoku[selectedSudoku.row][selectedSudoku.col]
@@ -158,9 +155,12 @@ class GameController extends GetxController {
       } else {
         removeNoteValue(index + 1);
       }
+      await GamePageDb.saveGameData(sudoku);
+      await GamePageDb.saveHintData(hints.value);
+      await GamePageDb.saveMistakeData(mistakes.value);
       isComplete();
     }
-    update();
+    // update();
   }
 
   bool _unChangable() {
@@ -178,34 +178,30 @@ class GameController extends GetxController {
           height: 200,
           child: Column(
             children: [
-              button('Beginner'),
-              button('Easy'),
-              button('Medium'),
-              button('Hard'),
-              // TextButton(
-              //     onPressed: () {
-              //       restart(1);
-              //       Get.back();
-              //     },
-              //     child: const Text('Beginner')),
-              // TextButton(
-              //     onPressed: () {
-              //       restart(2);
-              //       Get.back();
-              //     },
-              //     child: const Text('Easy')),
-              // TextButton(
-              //     onPressed: () {
-              //       restart(3);
-              //       Get.back();
-              //     },
-              //     child: const Text("Medium")),
-              // TextButton(
-              //     onPressed: () {
-              //       restart(4);
-              //       Get.back();
-              //     },
-              //     child: const Text('Hard')),
+              TextButton(
+                  onPressed: () {
+                    restart(1);
+                    Get.back();
+                  },
+                  child: const Text('Beginner')),
+              TextButton(
+                  onPressed: () {
+                    restart(2);
+                    Get.back();
+                  },
+                  child: const Text('Easy')),
+              TextButton(
+                  onPressed: () {
+                    restart(3);
+                    Get.back();
+                  },
+                  child: const Text("Medium")),
+              TextButton(
+                  onPressed: () {
+                    restart(4);
+                    Get.back();
+                  },
+                  child: const Text('Hard')),
             ],
           ),
         ),
@@ -245,23 +241,6 @@ class GameController extends GetxController {
         }
       }
     }
-  }
-
-  _startTimer(int seconds) {
-    const duration = Duration(seconds: 1);
-    remainingSeconds = seconds;
-    _timer = Timer.periodic(duration, (Timer timer) {
-      if (remainingSeconds == 0 || isComplete() == true) {
-        timer.cancel();
-        return showGameOverDialog();
-      } else {
-        int minutes = remainingSeconds ~/ 60;
-        int seconds = (remainingSeconds % 60);
-        time.value =
-            "${minutes.toString().padLeft(2, "0")}:${seconds.toString().padLeft(2, "0")}";
-        remainingSeconds--;
-      }
-    });
   }
 
   void showGameOverDialog() => Get.defaultDialog(
@@ -321,10 +300,11 @@ class GameController extends GetxController {
         ),
       );
 
-  Widget button(String text) {
+  Widget button(String text, difficulty) {
     return TextButton(
       onPressed: () {
         showRestartDialogue('Choose difficulty');
+        Get.back();
       },
       style: ButtonStyle(
         textStyle: MaterialStateProperty.all(

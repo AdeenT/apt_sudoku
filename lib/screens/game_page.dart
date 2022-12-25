@@ -1,8 +1,4 @@
-import 'package:apt_sudoku/functions/game_page_data.dart';
-import 'package:apt_sudoku/raw/raw.dart';
-import 'package:apt_sudoku/screens/home_screen.dart';
 import 'package:flutter/material.dart';
-
 import 'package:get/get.dart';
 import 'package:apt_sudoku/controllers/game_controller.dart';
 import 'package:apt_sudoku/model/box_chart.dart';
@@ -23,7 +19,11 @@ class _GamePageState extends State<GamePage> {
 
   @override
   void initState() {
-    controller.restart(widget.difficult);
+    if (widget.difficult == 5) {
+      controller.fetchContinueGameData();
+    } else {
+      controller.restart(widget.difficult);
+    }
     super.initState();
   }
 
@@ -34,51 +34,49 @@ class _GamePageState extends State<GamePage> {
         return showExitPopup(context);
       },
       child: SafeArea(
-        child: Obx(
-          () {
+        child: Scaffold(
+          appBar: AppBar(
+            automaticallyImplyLeading: false,
+            foregroundColor: Colors.black,
+            backgroundColor: Colors.white,
+            title: const Text(
+              'Sudoku+',
+              style: TextStyle(
+                  color: Colors.black87,
+                  fontSize: 32,
+                  fontWeight: FontWeight.w600),
+            ),
+          ),
+          backgroundColor: Colors.white,
+          body: Obx(() {
             if (controller.sudoku.isEmpty) return Container();
-            return Scaffold(
-              appBar: AppBar(
-                automaticallyImplyLeading: false,
-                foregroundColor: Colors.black,
-                backgroundColor: Colors.white,
-                title: const Text(
-                  'Sudoku+',
-                  style: TextStyle(
-                      color: Colors.black87,
-                      fontSize: 32,
-                      fontWeight: FontWeight.w600),
+            return Column(
+              children: [
+                Expanded(flex: 1, child: _buildHeader()),
+                Expanded(
+                  flex: 6,
+                  child: Center(
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: _buildSudokuGrid(),
+                    ),
+                  ),
                 ),
-              ),
-              backgroundColor: Colors.white,
-              body: Column(
-                children: [
-                  Expanded(flex: 1, child: _buildHeader()),
-                  Expanded(
-                    flex: 6,
-                    child: Center(
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: _buildSudokuGrid(),
+                Expanded(
+                  flex: 3,
+                  child: Column(
+                    children: [
+                      _buildOptions(),
+                      const SizedBox(
+                        height: 20,
                       ),
-                    ),
+                      _buildNumberButtons(),
+                    ],
                   ),
-                  Expanded(
-                    flex: 3,
-                    child: Column(
-                      children: [
-                        _buildOptions(),
-                        const SizedBox(
-                          height: 20,
-                        ),
-                        _buildNumberButtons(),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
+                ),
+              ],
             );
-          },
+          }),
         ),
       ),
     );
@@ -109,7 +107,6 @@ class _GamePageState extends State<GamePage> {
             Icons.restart_alt,
           ),
         ),
-        Text(controller.time.value)
       ],
     );
   }
@@ -123,36 +120,32 @@ class _GamePageState extends State<GamePage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: List.generate(
             9,
-            (col) => GetBuilder<GameController>(
-              builder: (controller) {
-                return InkWell(
-                  onTap: () {
-                    controller.selectedSudoku = controller.sudoku[row][col];
-                    controller.update();
-                  },
-                  child: Container(
-                    width: MediaQuery.of(context).size.width * 0.1,
-                    height: MediaQuery.of(context).size.width * 0.1,
-                    margin: EdgeInsets.only(
-                      bottom: row % 3 == 2 ? 2 : 0,
-                      right: col % 3 == 2 ? 2 : 0,
-                    ),
-                    decoration: BoxDecoration(
-                      border: Border(
-                        bottom: BorderSide(width: row % 3 == 2 ? 2 : 0),
-                        right: BorderSide(width: col % 3 == 2 ? 2 : 0),
-                        top: BorderSide(width: row % 3 == 0 ? 2 : 0),
-                        left: BorderSide(width: col % 3 == 0 ? 2 : 0),
-                      ),
-                      color: _selectCellColor(row, col),
-                    ),
-                    alignment: Alignment.center,
-                    child: controller.sudoku[row][col].text == 0
-                        ? _buildNotes(row, col)
-                        : _buildCellValue(row, col),
-                  ),
-                );
+            (col) => InkWell(
+              onTap: () {
+                controller.selectedSudoku = controller.sudoku[row][col];
+                setState(() {});
               },
+              child: Container(
+                width: MediaQuery.of(context).size.width * 0.1,
+                height: MediaQuery.of(context).size.width * 0.1,
+                margin: EdgeInsets.only(
+                  bottom: row % 3 == 2 ? 2 : 0,
+                  right: col % 3 == 2 ? 2 : 0,
+                ),
+                decoration: BoxDecoration(
+                  border: Border(
+                    bottom: BorderSide(width: row % 3 == 2 ? 2 : 0),
+                    right: BorderSide(width: col % 3 == 2 ? 2 : 0),
+                    top: BorderSide(width: row % 3 == 0 ? 2 : 0),
+                    left: BorderSide(width: col % 3 == 0 ? 2 : 0),
+                  ),
+                  color: _selectCellColor(row, col),
+                ),
+                alignment: Alignment.center,
+                child: controller.sudoku[row][col].text == 0
+                    ? _buildNotes(row, col)
+                    : _buildCellValue(row, col),
+              ),
             ),
           ),
         ),
@@ -230,39 +223,34 @@ class _GamePageState extends State<GamePage> {
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: List.generate(
         9,
-        (index) => GetBuilder<GameController>(
-          builder: (controller) {
-            return InkWell(
-              onTap: () => controller.onNumberclick(index),
-              child: Container(
-                width: MediaQuery.of(context).size.width * 0.1,
-                height: 40,
-                alignment: Alignment.center,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(13),
-                  color: controller.isNote.value &&
-                          controller.selectedSudoku.row != 100 &&
-                          controller
-                              .sudoku[controller.selectedSudoku.row]
-                                  [controller.selectedSudoku.col]
-                              .note
-                              .contains(index + 1)
-                      ? Colors.grey[400]
-                      : Colors.white,
-                  border: Border.all(
-                      color:
-                          controller.isNote.value ? Colors.black : Colors.blue),
-                ),
-                child: Text(
-                  '${index + 1}',
-                  style: const TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
+        (index) => InkWell(
+          onTap: () async => controller.onNumberclick(index),
+          child: Container(
+            width: MediaQuery.of(context).size.width * 0.1,
+            height: 40,
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(13),
+              color: controller.isNote.value &&
+                      controller.selectedSudoku.row != 100 &&
+                      controller
+                          .sudoku[controller.selectedSudoku.row]
+                              [controller.selectedSudoku.col]
+                          .note
+                          .contains(index + 1)
+                  ? Colors.grey[400]
+                  : Colors.white,
+              border: Border.all(
+                  color: controller.isNote.value ? Colors.black : Colors.blue),
+            ),
+            child: Text(
+              '${index + 1}',
+              style: const TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
               ),
-            );
-          },
+            ),
+          ),
         ),
       ),
     );
@@ -330,28 +318,32 @@ class _GamePageState extends State<GamePage> {
   }
 
   Future<bool> showExitPopup(BuildContext context) async {
-    return await showDialog(
-          barrierDismissible: false,
-          context: context,
-          builder: (context) => AlertDialog(
-            title: const Text('Exit Game'),
-            content: const Text('Save game and exit?'),
-            actions: [
-              ElevatedButton(
-                onPressed: () => Get.off(const HomeScreen()),
-                child: const Text('No'),
-              ),
-              ElevatedButton(
-                onPressed: () async {
-                  await GamePageData().saveJsonData(rawData);
-                  GamePageData().getJsonData();
-                  Get.off(const HomeScreen());
-                },
-                child: const Text('Yes'),
-              ),
-            ],
+    bool value = false;
+    await showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Exit Game'),
+        content: const Text('Save game and exit?'),
+        actions: [
+          ElevatedButton(
+            onPressed: () {
+              Get.back();
+            },
+            child: const Text('No'),
           ),
-        ) ??
-        false;
+          ElevatedButton(
+            onPressed: () {
+              // await GamePageDb.saveGameData(controller.sudoku);
+              // stopTime;
+              value = true;
+              Get.back();
+            },
+            child: const Text('Yes'),
+          ),
+        ],
+      ),
+    );
+    return value;
   }
 }
