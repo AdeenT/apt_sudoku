@@ -1,11 +1,7 @@
-import 'package:apt_sudoku/functions/game_page_data.dart';
-import 'package:apt_sudoku/screens/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:apt_sudoku/controllers/game_controller.dart';
 import 'package:apt_sudoku/model/box_chart.dart';
-
-// bool stopTime = true;
 
 class GamePage extends StatefulWidget {
   final int difficult;
@@ -39,51 +35,49 @@ class _GamePageState extends State<GamePage> {
       },
       child: SafeArea(
         child: Scaffold(
-              appBar: AppBar(
-                automaticallyImplyLeading: false,
-                foregroundColor: Colors.black,
-                backgroundColor: Colors.white,
-                title: const Text(
-                  'Sudoku+',
-                  style: TextStyle(
-                      color: Colors.black87,
-                      fontSize: 32,
-                      fontWeight: FontWeight.w600),
-                ),
-              ),
-              backgroundColor: Colors.white,
-              body: Obx(
-                 () {
-            if (controller.sudoku.isEmpty) return Container();
-                  return Column(
-                    children: [
-                      Expanded(flex: 1, child: _buildHeader()),
-                      Expanded(
-                        flex: 6,
-                        child: Center(
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: _buildSudokuGrid(),
-                          ),
-                        ),
-                      ),
-                      Expanded(
-                        flex: 3,
-                        child: Column(
-                          children: [
-                            _buildOptions(),
-                            const SizedBox(
-                              height: 20,
-                            ),
-                            _buildNumberButtons(),
-                          ],
-                        ),
-                      ),
-                    ],
-                  );
-                }
-              ),
+          appBar: AppBar(
+            automaticallyImplyLeading: false,
+            foregroundColor: Colors.black,
+            backgroundColor: Colors.white,
+            title: const Text(
+              'Sudoku+',
+              style: TextStyle(
+                  color: Colors.black87,
+                  fontSize: 32,
+                  fontWeight: FontWeight.w600),
             ),
+          ),
+          backgroundColor: Colors.white,
+          body: Obx(() {
+            if (controller.sudoku.isEmpty) return Container();
+            return Column(
+              children: [
+                Expanded(flex: 1, child: _buildHeader()),
+                Expanded(
+                  flex: 6,
+                  child: Center(
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: _buildSudokuGrid(),
+                    ),
+                  ),
+                ),
+                Expanded(
+                  flex: 3,
+                  child: Column(
+                    children: [
+                      _buildOptions(),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      _buildNumberButtons(),
+                    ],
+                  ),
+                ),
+              ],
+            );
+          }),
+        ),
       ),
     );
   }
@@ -113,7 +107,6 @@ class _GamePageState extends State<GamePage> {
             Icons.restart_alt,
           ),
         ),
-        // Text(controller.time.value)
       ],
     );
   }
@@ -130,7 +123,7 @@ class _GamePageState extends State<GamePage> {
             (col) => InkWell(
               onTap: () {
                 controller.selectedSudoku = controller.sudoku[row][col];
-                // controller.update();
+                setState(() {});
               },
               child: Container(
                 width: MediaQuery.of(context).size.width * 0.1,
@@ -341,7 +334,6 @@ class _GamePageState extends State<GamePage> {
           ),
           ElevatedButton(
             onPressed: () {
-              
               // await GamePageDb.saveGameData(controller.sudoku);
               // stopTime;
               value = true;

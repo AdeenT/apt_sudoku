@@ -75,11 +75,4 @@ class GamePageDb {
     await prefs.remove('timeData');
   }
 
-  // Future <void> getJsonData()async{
-  //   final prefs = await SharedPreferences.getInstance();
-  //   var temp = prefs.getString('jsonData');
-  //   print('Data saved: $temp');
-  //   var data = SudokuCell.fromMap(jsonDecode(temp.toString()));
-  // }
-
 }

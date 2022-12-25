@@ -6,13 +6,9 @@ import 'package:get/get.dart';
 import 'package:apt_sudoku/model/box_chart.dart';
 import 'package:apt_sudoku/screens/home_screen.dart';
 import 'package:sudokuer/sudokuer.dart' as s;
-import '../functions/db.dart';
 
 class GameController extends GetxController {
-  final userModel = UserFunctions();
-  // Timer? _timer;
   int remainingSeconds = 1;
-  // final time = '00:00'.obs;
   RxList<List<SudokuCell>> sudoku = RxList<List<SudokuCell>>();
   RxInt mistakes = 3.obs;
   RxInt hints = 3.obs;
@@ -28,19 +24,6 @@ class GameController extends GetxController {
       isExist: false,
       note: []);
   RxBool isNote = false.obs;
-
-  // @override
-  // void onReady() {
-  //   // _startTimer(900);
-  //   super.onReady();
-  // }
-
-  // @override
-  // void onClose() {
-  //   // if (_timer == null || stopTime == true) {
-  //   //   _timer!.cancel();
-  //   // }
-  // }
 
   void restart(int difficultyLevel) {
     mistakes.value = 3;
@@ -259,23 +242,6 @@ class GameController extends GetxController {
       }
     }
   }
-
-  // _startTimer(int seconds) {
-  //   const duration = Duration(seconds: 1);
-  //   remainingSeconds = seconds;
-  //   _timer = Timer.periodic(duration, (Timer timer) {
-  //     if (remainingSeconds == 0 || isComplete() == true) {
-  //       timer.cancel();
-  //       return showGameOverDialog();
-  //     } else {
-  //       int minutes = remainingSeconds ~/ 60;
-  //       int seconds = (remainingSeconds % 60);
-  //       time.value =
-  //           "${minutes.toString().padLeft(2, "0")}:${seconds.toString().padLeft(2, "0")}";
-  //       remainingSeconds--;
-  //     }
-  //   });
-  // }
 
   void showGameOverDialog() => Get.defaultDialog(
       title: 'Game Over',

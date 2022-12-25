@@ -1,17 +1,16 @@
 import 'package:apt_sudoku/functions/game_page_data.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:apt_sudoku/model/user_model.dart';
 import 'package:apt_sudoku/screens/splash_screen.dart';
 import 'package:get/get.dart';
+import'package:flutter/services.dart';
 
 const userKey = 'keep user logged in';
 Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   await Hive.initFlutter();
   await GamePageDb.initialize();
-  if (!Hive.isAdapterRegistered(UserModelAdapter().typeId)) {
-    Hive.registerAdapter(UserModelAdapter());
-  }
   runApp(const MyApp());
 }
 

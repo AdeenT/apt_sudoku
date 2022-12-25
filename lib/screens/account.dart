@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:apt_sudoku/controllers/howtoplay.dart';
 import 'package:apt_sudoku/controllers/settings_controllers.dart';
-import 'package:apt_sudoku/functions/db.dart';
-import 'package:apt_sudoku/model/user_model.dart';
 import 'package:apt_sudoku/signupin/name_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -20,8 +18,6 @@ class _AccountState extends State<Account> {
   String image = 'assets/images/user.png';
   String? name;
   final controller = Get.put(SettingsController());
-  final accountModel = UserModel();
-  final userModel = UserFunctions();
   @override
   void initState() {
     image;
@@ -177,6 +173,12 @@ class _AccountState extends State<Account> {
                         tileColor: const Color.fromARGB(255, 235, 249, 244),
                         iconColor: Colors.black,
                         onTap: () => controller.helpSection(context),
+                      ), ListTile(
+                        leading: const Icon(Icons.people_alt_outlined),
+                        title: const Text('Add another account'),
+                        tileColor: const Color.fromARGB(255, 235, 249, 244),
+                        iconColor: Colors.black,
+                        onTap: () => Get.off(const LoginScreen()) ,
                       ),
                       ListTile(
                         leading: const Icon(Icons.door_front_door_outlined),

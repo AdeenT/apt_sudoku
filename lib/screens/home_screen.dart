@@ -1,6 +1,5 @@
 import 'package:apt_sudoku/controllers/settings_controllers.dart';
 import 'package:apt_sudoku/functions/game_page_data.dart';
-import 'package:apt_sudoku/model/box_chart.dart';
 import 'package:apt_sudoku/screens/account.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -21,7 +20,6 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     getData();
-    // setState(() {});
     super.initState();
   }
 
@@ -33,8 +31,8 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       child: Scaffold(
         appBar: AppBar(
-          iconTheme: const IconThemeData(
-            color: Colors.black,
+          iconTheme: IconThemeData(
+            color: Colors.grey.shade700,
           ),
           automaticallyImplyLeading: false,
           backgroundColor: Colors.white,
@@ -47,8 +45,9 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           actions: [
             IconButton(
-              icon: const Icon(Icons.account_box_rounded),
-              onPressed: () => Get.to(() => const Account()),
+              icon: const Icon(Icons.account_circle_outlined),
+              onPressed: () =>
+                  Get.to(() => const Account(), transition: Transition.cupertino),
             ),
           ],
         ),
@@ -159,20 +158,6 @@ class _HomeScreenState extends State<HomeScreen> {
               ));
         },
       );
-
-  // continueButton() {
-  //   if (rawData.isNotEmpty) {
-  //     return ElevatedButton(
-  //       onPressed: () {
-  //         getData();
-  //       },
-  //       style: ButtonStyle(
-  //         backgroundColor: MaterialStateProperty.all(Colors.blue),
-  //       ),
-  //       child: const Text('  Continue  '),
-  //     );
-  //   }
-  //}
 
   void getData() async {
     isSavedGame = await GamePageDb.isSavedGameAvailable();
