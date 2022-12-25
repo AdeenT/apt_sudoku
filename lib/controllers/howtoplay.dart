@@ -55,35 +55,37 @@ class _HowToPlayState extends State<HowToPlay> {
             ),
           ),
           Container(
-              color: const Color.fromARGB(255, 175, 222, 252),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(
-                        left: 8.0, right: 8.0, bottom: 25),
-                    child: Image.asset(
-                      'assets/images/sudokuGrid2.jpg',
-                    ),
+            color: const Color.fromARGB(255, 175, 222, 252),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Padding(
+                  padding:
+                      const EdgeInsets.only(left: 8.0, right: 8.0, bottom: 25),
+                  child: Image.asset(
+                    'assets/images/sudokuGrid2.jpg',
                   ),
-                  Padding(
-                      padding: const EdgeInsets.only(left: 8.0, right: 8.0),
-                      child: SizedBox(
-                        child: _buildNumbers(),
-                      )),
-                  const Padding(
-                    padding: EdgeInsets.only(left: 8.0, right: 8.0),
-                    child: Text(
-                      "Now to complete the puzzle you need to click on an empty cell to select it and there will be a set of numbers in the screen now click on the numbers to enter it on the empty cell",
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 17),
-                      textAlign: TextAlign.center,
+                ),
+                Padding(
+                    padding: const EdgeInsets.only(left: 8.0, right: 8.0),
+                    child: SizedBox(
+                      child: _buildNumbers(),
+                    )),
+                const Padding(
+                  padding: EdgeInsets.only(left: 8.0, right: 8.0),
+                  child: Text(
+                    "Now to complete the puzzle you need to click on an empty cell to select it and there will be a set of numbers in the screen now click on the numbers to enter it on the empty cell",
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 17,
                     ),
+                    textAlign: TextAlign.center,
                   ),
-                ],
-              )),
+                ),
+              ],
+            ),
+          ),
         ],
         slideIconWidget: const Icon(Icons.arrow_back_ios_new),
         positionSlideIcon: 0.65,
@@ -101,7 +103,7 @@ class _HowToPlayState extends State<HowToPlay> {
         9,
         (index) => Container(
           width: MediaQuery.of(context).size.width * 0.1,
-          height: 40,
+          height: MediaQuery.of(context).size.width * 0.13,
           alignment: Alignment.center,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(13),

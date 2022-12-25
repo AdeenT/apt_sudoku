@@ -44,27 +44,23 @@ class SudokuCell {
 
   factory SudokuCell.fromMap(Map<String, dynamic> map) {
     return SudokuCell(
-        text: map['text'] as int,
-        correctText: map['correctText'] as int,
-        row: map['row'] as int,
-        col: map['col'] as int,
-        team: map['team'] as int,
-        isFocus: map['isFocus'] as bool,
-        isCorrect: map['isCorrect'] as bool,
-        isDefault: map['isDefault'] as bool,
-        isExist: map['isExist'] as bool,
-        note: 
-          [],
-        );
+      text: map['text'] as int,
+      correctText: map['correctText'] as int,
+      row: map['row'] as int,
+      col: map['col'] as int,
+      team: map['team'] as int,
+      isFocus: map['isFocus'] as bool,
+      isCorrect: map['isCorrect'] as bool,
+      isDefault: map['isDefault'] as bool,
+      isExist: map['isExist'] as bool,
+      note: [],
+    );
   }
 
   String toJson() => json.encode(toMap());
 
   factory SudokuCell.fromJson(String source) =>
       SudokuCell.fromMap(json.decode(source) as Map<String, dynamic>);
-
-////////////////////////////////
-////////////////////////////////
 
   SudokuCell copyWith({
     int? text,

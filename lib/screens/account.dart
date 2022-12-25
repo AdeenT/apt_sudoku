@@ -16,11 +16,12 @@ class Account extends StatefulWidget {
 
 class _AccountState extends State<Account> {
   String image = 'assets/images/user.png';
+  String defaultImage = 'assets/images/user.png';
   String? name;
   final controller = Get.put(SettingsController());
   @override
   void initState() {
-    image;
+    checkImage();
     nameSet();
     imageGet();
     super.initState();
@@ -107,13 +108,13 @@ class _AccountState extends State<Account> {
               ),
               CircleAvatar(
                 backgroundColor: Colors.transparent,
-                radius: 45,
+                radius: MediaQuery.of(context).size.width * 0.12,
                 child: ClipRRect(
-                  child: Image.asset(image),
+                  child: Image.asset(checkImage()),
                 ),
               ),
               SizedBox(
-                height: MediaQuery.of(context).size.width * 0.0,
+                height: MediaQuery.of(context).size.width * 0.04,
               ),
               Text(
                 name.toString(),
@@ -131,23 +132,21 @@ class _AccountState extends State<Account> {
                   padding: const EdgeInsets.all(8.0),
                   child: ListView(
                     children: [
-                      const SizedBox(
-                        height: 30,
+                      SizedBox(
+                        height: MediaQuery.of(context).size.width * 0.08,
                       ),
                       ListTile(
-                        leading: const Icon(Icons.event_note_sharp),
-                        title: const Text('How to Play'),
-                        trailing: const Icon(Icons.arrow_forward_ios),
-                        tileColor: const Color.fromARGB(255, 235, 249, 244),
-                        iconColor: Colors.black,
-                        onTap: () => Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const HowToPlay(),
-                            )),
-                      ),
-                      const SizedBox(
-                        height: 15,
+                          leading: const Icon(Icons.event_note_sharp),
+                          title: const Text('How to Play'),
+                          trailing: const Icon(Icons.arrow_forward_ios),
+                          tileColor: const Color.fromARGB(255, 235, 249, 244),
+                          iconColor: Colors.black,
+                          onTap: () => Get.to(
+                                const HowToPlay(),
+                                transition: Transition.cupertino,
+                              )),
+                      SizedBox(
+                        height: MediaQuery.of(context).size.width * 0.03,
                       ),
                       ListTile(
                         leading: const Icon(Icons.feedback_outlined),
@@ -173,12 +172,6 @@ class _AccountState extends State<Account> {
                         tileColor: const Color.fromARGB(255, 235, 249, 244),
                         iconColor: Colors.black,
                         onTap: () => controller.helpSection(context),
-                      ), ListTile(
-                        leading: const Icon(Icons.people_alt_outlined),
-                        title: const Text('Add another account'),
-                        tileColor: const Color.fromARGB(255, 235, 249, 244),
-                        iconColor: Colors.black,
-                        onTap: () => Get.off(const LoginScreen()) ,
                       ),
                       ListTile(
                         leading: const Icon(Icons.door_front_door_outlined),
@@ -241,5 +234,13 @@ class _AccountState extends State<Account> {
     setState(() {
       image = sharedPreferences.getString('image').toString();
     });
+  }
+
+  checkImage() {
+    if (image == defaultImage) {
+      return defaultImage;
+    } else {
+      return image;
+    }
   }
 }

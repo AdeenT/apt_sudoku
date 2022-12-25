@@ -45,14 +45,14 @@ class _LoginScreenState extends State<LoginScreen> {
         child: SafeArea(
           child: SingleChildScrollView(
             child: Padding(
-              padding: const EdgeInsets.all(15.0),
+              padding:  EdgeInsets.all( MediaQuery.of(context).size.width * 0.05),
               child: Form(
                 key: loginKey,
                 child: Center(
                   child: Column(
                     children: [
-                      const SizedBox(
-                        height: 24,
+                       SizedBox(
+                        height:  MediaQuery.of(context).size.width * 0.4,
                       ),
                       const Text(
                         'Enjoy Free Sudoku \n          Puzzles',
@@ -61,8 +61,8 @@ class _LoginScreenState extends State<LoginScreen> {
                             fontWeight: FontWeight.w600,
                             fontSize: 20),
                       ),
-                      const SizedBox(
-                        height: 24,
+                       SizedBox(
+                        height:  MediaQuery.of(context).size.width * 0.07,
                       ),
                       TextFormField(
                         controller: _userController,
@@ -80,11 +80,8 @@ class _LoginScreenState extends State<LoginScreen> {
                           return null;
                         },
                       ),
-                      const SizedBox(
-                        height: 24,
-                      ),
-                      const SizedBox(
-                        height: 24,
+                       SizedBox(
+                        height:  MediaQuery.of(context).size.width * 0.07,
                       ),
                       SizedBox(
                         width: 100,
@@ -104,9 +101,6 @@ class _LoginScreenState extends State<LoginScreen> {
                                 color: Colors.white, fontWeight: FontWeight.bold),
                           ),
                         ),
-                      ),
-                      const SizedBox(
-                        height: 30,
                       ),
                     ],
                   ),

@@ -67,8 +67,8 @@ class _GamePageState extends State<GamePage> {
                   child: Column(
                     children: [
                       _buildOptions(),
-                      const SizedBox(
-                        height: 20,
+                       SizedBox(
+                        height:  MediaQuery.of(context).size.width * 0.07,
                       ),
                       _buildNumberButtons(),
                     ],
@@ -89,8 +89,10 @@ class _GamePageState extends State<GamePage> {
         Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Icon(
+            Icon(
               Icons.heart_broken,
+              size: 30,
+              color: Colors.red.shade400,
             ),
             const SizedBox(
               width: 5,
@@ -98,13 +100,14 @@ class _GamePageState extends State<GamePage> {
             Text(controller.mistakes.toString()),
           ],
         ),
-        const SizedBox(
-          width: 160,
+         SizedBox(
+          width:  MediaQuery.of(context).size.width * 0.5,
         ),
         InkWell(
           onTap: () => controller.showRestartDialogue('Difficulty Level'),
           child: const Icon(
-            Icons.restart_alt,
+            Icons.restart_alt_rounded,
+            size: 30,
           ),
         ),
       ],
@@ -155,11 +158,15 @@ class _GamePageState extends State<GamePage> {
 
   Widget _buildOptions() {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
         InkWell(
           onTap: controller.onErase,
-          child: const Icon(Icons.delete_sweep_outlined),
+          child: Icon(
+            Icons.delete_sweep_outlined,
+            size: 25,
+            color: Colors.grey.shade700,
+          ),
         ),
         InkWell(
           onTap: controller.onNoteFill,
@@ -184,7 +191,10 @@ class _GamePageState extends State<GamePage> {
                 isExist: false,
                 note: []);
           },
-          child: const Icon(Icons.grid_on_rounded),
+          child: const Icon(
+            Icons.grid_on_rounded,
+            size: 25,
+          ),
         ),
         InkWell(
           onTap: () {
@@ -193,6 +203,7 @@ class _GamePageState extends State<GamePage> {
           child: Icon(
             Icons.draw_rounded,
             color: !controller.isNote.value ? Colors.black : Colors.blue,
+            size: 25,
           ),
         ),
         InkWell(
@@ -203,11 +214,12 @@ class _GamePageState extends State<GamePage> {
             children: [
               const Icon(
                 Icons.lightbulb_outline_rounded,
+                size: 25,
               ),
               Text(
                 '${controller.hints}',
                 style: const TextStyle(
-                  fontSize: 10,
+                  fontSize: 11,
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -224,10 +236,13 @@ class _GamePageState extends State<GamePage> {
       children: List.generate(
         9,
         (index) => InkWell(
-          onTap: () async => controller.onNumberclick(index),
+          onTap: () async {
+            controller.onNumberclick(index);
+            setState(() {});
+          },
           child: Container(
             width: MediaQuery.of(context).size.width * 0.1,
-            height: 40,
+            height:  MediaQuery.of(context).size.width * 0.13,
             alignment: Alignment.center,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(13),
@@ -334,8 +349,6 @@ class _GamePageState extends State<GamePage> {
           ),
           ElevatedButton(
             onPressed: () {
-              // await GamePageDb.saveGameData(controller.sudoku);
-              // stopTime;
               value = true;
               Get.back();
             },

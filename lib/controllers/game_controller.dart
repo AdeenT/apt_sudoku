@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'package:apt_sudoku/functions/game_page_data.dart';
-import 'package:apt_sudoku/screens/game_page.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:apt_sudoku/model/box_chart.dart';
@@ -108,7 +107,6 @@ class GameController extends GetxController {
     selectedSudoku.text = 0;
     selectedSudoku.isCorrect = false;
     selectedSudoku.note.clear();
-    // update();
   }
 
   void onNoteFill() {
@@ -116,7 +114,6 @@ class GameController extends GetxController {
     sudoku[selectedSudoku.row][selectedSudoku.col].note =
         List.generate(9, (index) => index + 1);
     fetchSafeValues();
-    // update();
   }
 
   void onHint() {
@@ -160,7 +157,6 @@ class GameController extends GetxController {
       await GamePageDb.saveMistakeData(mistakes.value);
       isComplete();
     }
-    // update();
   }
 
   bool _unChangable() {
@@ -259,7 +255,7 @@ class GameController extends GetxController {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              const Text("Earned a star"),
+              const Text("You've solved the puzzle"),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
@@ -280,6 +276,7 @@ class GameController extends GetxController {
                   ),
                   ElevatedButton(
                     onPressed: () {
+                      Get.back();
                       showRestartDialogue('Choose difficulty');
                     },
                     style: ButtonStyle(
